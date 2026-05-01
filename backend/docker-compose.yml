@@ -1,0 +1,120 @@
+version: '3.8'
+
+# =============================================================
+# Chatbot Microservices - Docker Compose
+# =============================================================
+# This file tells Docker how to run all 5 services + MongoDB + Redis
+# 
+# How to use:
+#   1. Make sure Docker Desktop is running
+#   2. Open a terminal in this folder (backend/)
+#   3. Run: docker-compose up --build
+#   4. Wait for everything to start (first time takes a few minutes)
+#   5. Open http://localhost:5000 in your browser
+#
+# To stop: Press Ctrl+C in the terminal, then run: docker-compose down
+# =============================================================
+
+services:
+  # ---------- DATABASES ----------
+  # MongoDB stores all user accounts, chat messages, and AI logs
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    # Health check - waits for MongoDB to be ready before other services start
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      retries: 5
+
+  # Redis stores temporary data: rate limits, user sessions, email queue jobs
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 5
+
+  # ---------- OUR SERVICES ----------
+  # Gateway - the front door. All API requests hit this first
+  gateway:
+    build: ./gateway
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # Auth Service - handles login, signup, and user management
+  auth-service:
+    build: ./services/auth-service
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - MONGO_URI=mongodb://mongo:27017/chatbot_auth
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Chat Service - real-time messaging via WebSockets
+  chat-service:
+    build: ./services/chat-service
+    ports:
+      - "5002:5002"
+    environment:
+      - PORT=5002
+      - MONGO_URI=mongodb://mongo:27017/chatbot_chat
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # AI Service - smart replies using OpenRouter AI
+  ai-service:
+    build: ./services/ai-service
+    ports:
+      - "5003:5003"
+    environment:
+      - PORT=5003
+      - MONGO_URI=mongodb://mongo:27017/chatbot_ai
+      - REDIS_URL=redis://redis:6379
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Notification Service - sends emails in the background
+  notification-service:
+    build: ./services/notification-service
+    ports:
+      - "5004:5004"
+    environment:
+      - PORT=5004
+      - REDIS_URL=redis://redis:6379
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+    depends_on:
+      redis:
+        condition: service_healthy
+
+# Persistent storage for MongoDB (so data isn't lost when containers stop)
+volumes:
+  mongo_data:
