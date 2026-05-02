@@ -1,0 +1,17 @@
+@use 'variables' as *;
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
+
+body {
+  font-family: $font-body;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  font-weight: $font-weight-regular;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-display;
+  line-height: 1.2;
+  color: $color-text-primary;
+}

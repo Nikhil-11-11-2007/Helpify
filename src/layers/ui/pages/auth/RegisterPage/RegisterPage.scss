@@ -1,0 +1,239 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
+.register-page {
+  @include flex-col;
+  width: 100%;
+  max-width: 440px;
+  gap: $space-5;
+
+  // ────────────────────────────────────────────
+  // Header
+  // ────────────────────────────────────────────
+  &__header {
+    @include flex-col;
+    gap: $space-2;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    letter-spacing: -0.03em;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: 1.5;
+  }
+
+  // ────────────────────────────────────────────
+  // Form
+  // ────────────────────────────────────────────
+  &__form {
+    @include flex-col;
+    gap: $space-4;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-3;
+
+    @include mobile {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__field {
+    @include flex-col;
+    gap: $space-2;
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+    letter-spacing: 0.01em;
+  }
+
+  &__input-wrap {
+    position: relative;
+    @include flex-center;
+  }
+
+  &__input-icon {
+    position: absolute;
+    left: $space-4;
+    color: $color-text-muted;
+    @include flex-center;
+    pointer-events: none;
+    transition: color $transition-fast;
+  }
+
+  &__input-wrap:focus-within {
+    .register-page__input-icon {
+      color: $color-primary;
+    }
+  }
+
+  &__input {
+    @include input-base;
+    padding-left: calc($space-4 + 17px + $space-3);
+
+    &--no-icon {
+      padding-left: $space-4;
+    }
+
+    &--password {
+      padding-right: calc($space-4 + 17px + $space-3);
+    }
+  }
+
+  &__toggle-password {
+    position: absolute;
+    right: $space-4;
+    @include flex-center;
+    color: $color-text-muted;
+    transition: color $transition-fast;
+    padding: $space-1;
+    border-radius: $radius-sm;
+
+    @include focus-ring;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  // ────────────────────────────────────────────
+  // Password strength
+  // ────────────────────────────────────────────
+  &__strength {
+    @include flex-between;
+    gap: $space-3;
+  }
+
+  &__strength-bars {
+    display: flex;
+    gap: $space-1;
+    flex: 1;
+  }
+
+  &__strength-bar {
+    flex: 1;
+    height: 4px;
+    background: $color-border;
+    border-radius: $radius-full;
+    transition: background $transition-base;
+
+    &--filled {
+      background: #F59E0B;
+    }
+  }
+
+  &__strength-label {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: #F59E0B;
+    min-width: 28px;
+  }
+
+  // ────────────────────────────────────────────
+  // Terms checkbox
+  // ────────────────────────────────────────────
+  &__terms {
+    margin-top: $space-1;
+  }
+
+  &__checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-3;
+    cursor: pointer;
+  }
+
+  &__checkbox {
+    display: none;
+
+    &:checked + .register-page__checkbox-custom {
+      background: $color-primary;
+      border-color: $color-primary;
+
+      &::after {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  }
+
+  &__checkbox-custom {
+    @include flex-center;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    border: 2px solid $color-border;
+    border-radius: 5px;
+    background: $color-bg;
+    transition: background $transition-fast, border-color $transition-fast;
+    position: relative;
+
+    &::after {
+      content: '';
+      width: 10px;
+      height: 6px;
+      border-left: 2px solid $color-white;
+      border-bottom: 2px solid $color-white;
+      transform: rotate(-45deg) scale(0.7) translateY(-2px);
+      opacity: 0;
+      transition: opacity $transition-fast, transform $transition-fast;
+    }
+  }
+
+  &__checkbox-text {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: 1.5;
+  }
+
+  &__terms-link {
+    color: $color-primary;
+    font-weight: $font-weight-medium;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $color-primary-light;
+    }
+  }
+
+  // ────────────────────────────────────────────
+  // Submit button
+  // ────────────────────────────────────────────
+  &__btn {
+    @include btn-primary;
+    gap: $space-2;
+    margin-top: $space-1;
+  }
+
+  // ────────────────────────────────────────────
+  // Login link
+  // ────────────────────────────────────────────
+  &__login-prompt {
+    text-align: center;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+
+  &__login-link {
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $color-primary-light;
+    }
+  }
+}

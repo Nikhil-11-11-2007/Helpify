@@ -1,0 +1,41 @@
+@use 'variables' as *;
+@use 'reset';
+@use 'typography';
+@use 'mixins' as *;
+
+// ── Global base
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background: $color-bg;
+}
+
+// ── Scrollbar styling
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: $color-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-border;
+  border-radius: $radius-full;
+
+  &:hover {
+    background: $color-text-muted;
+  }
+}
+
+// ── Selection
+::selection {
+  background: rgba($color-primary, 0.18);
+  color: $color-primary-dark;
+}

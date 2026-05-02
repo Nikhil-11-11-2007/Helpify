@@ -1,0 +1,361 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  min-height: 100vh;
+  background: $color-white;
+
+  @include tablet {
+    grid-template-columns: 1fr;
+  }
+
+  // ────────────────────────────────────────────
+  // Left panel
+  // ────────────────────────────────────────────
+  &__panel {
+    position: relative;
+    background: $color-primary;
+    overflow: hidden;
+    min-height: 100vh;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(#7B4FE0, 0.55) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 100%,  rgba($color-deep, 0.75) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 50% 50%,   rgba($color-primary-dark, 0.3) 0%, transparent 70%);
+      z-index: 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      z-index: 0;
+    }
+
+    @include tablet {
+      display: none;
+    }
+  }
+
+  &__panel-inner {
+    @include flex-col;
+    height: 100%;
+    min-height: 100vh;
+    padding: $space-10 $space-12;
+    position: relative;
+    z-index: $z-above;
+  }
+
+  // ────────────────────────────────────────────
+  // Brand
+  // ────────────────────────────────────────────
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    margin-bottom: $space-5;
+  }
+
+  &__logo {
+    @include flex-center;
+    width: 42px;
+    height: 42px;
+    background: rgba($color-white, 0.18);
+    border: 1.5px solid rgba($color-white, 0.3);
+    border-radius: $radius-md;
+    flex-shrink: 0;
+  }
+
+  &__brand-name {
+    font-family: $font-display;
+    font-size: $font-size-md;
+    font-weight: $font-weight-bold;
+    color: $color-white;
+    letter-spacing: -0.02em;
+  }
+
+  // ────────────────────────────────────────────
+  // Panel content — vertically centered
+  // ────────────────────────────────────────────
+  &__panel-content {
+    @include flex-col;
+    flex: 1;
+    justify-content: center;
+    gap: $space-6;
+    padding: $space-8 0;
+  }
+
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-4;
+    background: rgba($color-white, 0.12);
+    border: 1px solid rgba($color-white, 0.22);
+    border-radius: $radius-full;
+    font-family: $font-body;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: rgba($color-white, 0.9);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    width: fit-content;
+
+    &::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      background: #6EF7A7;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #6EF7A7, 0 0 20px rgba(#6EF7A7, 0.4);
+      flex-shrink: 0;
+    }
+  }
+
+  &__headline {
+    font-family: $font-display;
+    font-size: 2.85rem;
+    font-weight: $font-weight-bold;
+    color: $color-white;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+
+  &__headline-accent {
+    display: inline-block;
+    color: transparent;
+    -webkit-text-stroke: 2.5px rgba($color-white, 0.96);
+    font-style: italic;
+    animation: accent 3s ease-in-out infinite;
+
+  }
+
+  @keyframes accent {
+    0% {
+      -webkit-text-stroke-color: rgba($color-white, 0.96);
+    }
+    50% {
+      // give different colors on animations to  look  good with different background shades
+      -webkit-text-stroke-color:rgba(#ffc003, 0.9);
+      // on 50% scale and move the animation a bit to make it more dynamic
+      transform: scale(1.05) translateY(-2px);
+    }
+    75% {
+        -webkit-text-stroke-color: rgba(#62ff00, 0.96);
+        transform: scale(0.95) translateY(1px);
+    }
+    90% {
+      -webkit-text-stroke-color:rgba(#ffc003, 0.9);
+      transform: scale(1.02) translateY(-1px);
+    }
+    95% {
+      -webkit-text-stroke-color: rgba(#62ff00, 0.96);
+      transform: scale(0.98) translateY(1px);
+    }
+    97% {
+      -webkit-text-stroke-color:rgba(#ffc003, 0.9);
+      transform: scale(1.01) translateY(-1px);
+    }
+    100%{
+      -webkit-text-stroke-color: rgba($color-white, 0.96);
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  &__subtext {
+    font-size: $font-size-sm;
+    color: rgba($color-white, 0.65);
+    line-height: 1.78;
+    max-width: 360px;
+  }
+
+  // ────────────────────────────────────────────
+  // Stats
+  // ────────────────────────────────────────────
+  &__stats {
+    display: flex;
+    align-items: stretch;
+    background: rgba($color-white, 0.07);
+    border: 1px solid rgba($color-white, 0.13);
+    border-radius: $radius-lg;
+    overflow: hidden;
+    width: fit-content;
+  }
+
+  &__stat {
+    @include flex-col;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: $space-5 $space-8;
+    position: relative;
+
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 22%;
+      height: 56%;
+      width: 1px;
+      background: rgba($color-white, 0.16);
+    }
+  }
+
+  &__stat-value {
+    font-family: $font-display;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-white;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  &__stat-label {
+    font-size: $font-size-xs;
+    color: rgba($color-white, 0.52);
+    white-space: nowrap;
+    font-weight: $font-weight-medium;
+  }
+
+  &__stat-divider { display: none; }
+
+  // ────────────────────────────────────────────
+  // Chat preview
+  // ────────────────────────────────────────────
+  &__chat-preview {
+    @include flex-col;
+    gap: $space-3;
+    padding: $space-5;
+    background: rgba($color-deep, 0.5);
+    border: 1px solid rgba($color-white, 0.1);
+    border-radius: $radius-xl;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba($color-white, 0.08);
+    max-width: 390px;
+  }
+
+  &__chat-preview-label {
+    font-size: 10px;
+    font-weight: $font-weight-semibold;
+    color: rgba($color-white, 0.4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding-bottom: $space-3;
+    border-bottom: 1px solid rgba($color-white, 0.07);
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+
+    &::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #6EF7A7;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #6EF7A7;
+    }
+  }
+
+  &__chat-bubble {
+    display: flex;
+    align-items: flex-end;
+    gap: $space-2;
+
+    &--user {
+      flex-direction: row-reverse;
+
+      .auth-layout__chat-text {
+        background: rgba($color-primary-light, 0.5);
+        border: 1px solid rgba($color-white, 0.15);
+        color: rgba($color-white, 0.95);
+        border-radius: $radius-lg $radius-lg 4px $radius-lg;
+      }
+    }
+
+    &--bot {
+      .auth-layout__chat-text {
+        background: rgba($color-white, 0.08);
+        border: 1px solid rgba($color-white, 0.09);
+        color: rgba($color-white, 0.85);
+        border-radius: $radius-lg $radius-lg $radius-lg 4px;
+      }
+    }
+  }
+
+  &__chat-avatar {
+    @include flex-center;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: rgba($color-primary-light, 0.4);
+    border: 1px solid rgba($color-white, 0.2);
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: $font-weight-bold;
+    color: $color-white;
+    font-family: $font-display;
+  }
+
+  &__chat-text {
+    padding: $space-3 $space-4;
+    font-size: $font-size-xs;
+    line-height: 1.6;
+    max-width: 255px;
+  }
+
+  // ────────────────────────────────────────────
+  // Orbs
+  // ────────────────────────────────────────────
+  &__orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+
+    &--1 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(#8B5CF6, 0.4) 0%, transparent 65%);
+      top: -110px;
+      right: -110px;
+      filter: blur(12px);
+    }
+
+    &--2 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba($color-deep, 0.85) 0%, transparent 70%);
+      bottom: 40px;
+      left: -90px;
+      filter: blur(10px);
+    }
+  }
+
+  // ────────────────────────────────────────────
+  // Right form area
+  // ────────────────────────────────────────────
+  &__form-area {
+    @include flex-center;
+    padding: $space-8 $space-10;
+    overflow-y: auto;
+    background: $color-white;
+
+    @include laptop {
+      padding: $space-8 $space-6;
+    }
+
+    @include tablet {
+      padding: $space-12 $space-4 $space-6;
+      align-items: flex-start;
+    }
+  }
+}
