@@ -1,51 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import useChat from "../../../../../layers/hooks/useChat";
 import "./ChatPage.scss";
 
-const chatSessions = [
-  {
-    id: 1,
-    user: "Priya",
-    topic: "Password reset",
-    status: "active",
-  },
-  {
-    id: 2,
-    user: "Rahul",
-    topic: "Billing issue",
-    status: "pending",
-  },
-  {
-    id: 3,
-    user: "Sofia",
-    topic: "Zapier help",
-    status: "resolved",
-  },
-];
-
-const chatMessages = {
-  1: [
-    {
-      sender: "customer",
-      text: "Password reset not working",
-    },
-    {
-      sender: "ai",
-      text: "Checking your account...",
-    },
-  ],
-};
-
 const ChatPage = () => {
-  const [activeChat, setActiveChat] =
-    useState(chatSessions[0]);
+  const { messages, loading, error, sendMessage, clearError } = useChat();
 
-  const [message, setMessage] =
-    useState("");
+  const [ownerId, setOwnerId] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [message, setMessage] = useState("");
+  
+  const messagesEndRef = useRef(null);
 
-  const sendMessage = () => {
-    if (!message.trim()) return;
+  useEffect(() => {
+    return () => {
+      clearError();
+    };
+  }, [clearError]);
 
-    console.log("Send:", message);
+  useEffect(() => {
+    // Scroll to bottom when messages change
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSend = () => {
+    if (!message.trim() || !ownerId.trim() || !customerName.trim() || !customerEmail.trim()) return;
+
+    sendMessage({
+      ownerId,
+      customerName,
+      customerEmail,
+      message,
+    });
 
     setMessage("");
   };
@@ -55,85 +41,104 @@ const ChatPage = () => {
       {/* Header */}
       <div className="chat-header">
         <div>
-          <h1>Live Chat</h1>
-          <p>
-            Manage customer conversations
-          </p>
+          <h1>Live Chat Widget</h1>
+          <p>Public-facing customer support chat</p>
         </div>
       </div>
 
       <div className="chat-layout">
-        {/* Sidebar */}
-        <div className="chat-sidebar">
-          {chatSessions.map((chat) => (
-            <div
-              key={chat.id}
-              className={`chat-session ${
-                activeChat.id === chat.id
-                  ? "active"
-                  : ""
-              }`}
-              onClick={() =>
-                setActiveChat(chat)
-              }
-            >
-              <h4>{chat.user}</h4>
-              <p>{chat.topic}</p>
+        {/* Sidebar / Info Setup */}
+        <div className="chat-sidebar" style={{ padding: '1.5rem' }}>
+          <h3>Chat Setup</h3>
+          <p style={{ marginBottom: '1rem', color: '#666' }}>Enter details to start chatting.</p>
 
-              <span
-                className={`status ${chat.status}`}
-              >
-                {chat.status}
-              </span>
-            </div>
-          ))}
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Owner ID</label>
+            <input 
+              type="text" 
+              value={ownerId} 
+              onChange={(e) => setOwnerId(e.target.value)} 
+              placeholder="e.g. 60d5ecb..."
+              style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '6px' }}
+              disabled={messages.length > 0}
+            />
+          </div>
+          
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Your Name</label>
+            <input 
+              type="text" 
+              value={customerName} 
+              onChange={(e) => setCustomerName(e.target.value)} 
+              placeholder="John Doe"
+              style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '6px' }}
+              disabled={messages.length > 0}
+            />
+          </div>
+
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Your Email</label>
+            <input 
+              type="email" 
+              value={customerEmail} 
+              onChange={(e) => setCustomerEmail(e.target.value)} 
+              placeholder="john@example.com"
+              style={{ width: '100%', padding: '0.75rem', border: '1px solid #ddd', borderRadius: '6px' }}
+              disabled={messages.length > 0}
+            />
+          </div>
+
+          {error && <div style={{ color: 'red', marginTop: '1rem' }}>{error}</div>}
         </div>
 
         {/* Chat Window */}
         <div className="chat-window">
           <div className="chat-top">
-            <h3>{activeChat.user}</h3>
-            <span>{activeChat.topic}</span>
+            <h3>Support Team</h3>
+            <span>Online</span>
           </div>
 
           <div className="chat-messages">
-            {chatMessages[
-              activeChat.id
-            ]?.map((msg, index) => (
-              <div
-                key={index}
-                className={`message ${msg.sender}`}
-              >
-                {msg.text}
+            {messages.length === 0 ? (
+              <div style={{ textAlign: 'center', marginTop: '2rem', color: '#888' }}>
+                Start a conversation by sending a message below.
               </div>
-            ))}
+            ) : (
+              messages.map((msg, index) => {
+                // Map roles to CSS classes: 'customer' (sent by user) -> right aligned, 'ai' or 'admin' -> left aligned
+                const roleClass = msg.role === 'customer' || msg.role === 'user' ? 'customer' : 'ai';
+                return (
+                  <div key={index} className={`message ${roleClass}`}>
+                    {msg.content}
+                  </div>
+                );
+              })
+            )}
+            {loading && (
+              <div className="message ai" style={{ opacity: 0.7 }}>
+                Typing...
+              </div>
+            )}
+            <div ref={messagesEndRef} />
           </div>
 
           <div className="chat-input">
             <textarea
               placeholder="Write message..."
               value={message}
-              onChange={(e) =>
-                setMessage(e.target.value)
-              }
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              disabled={loading}
             />
 
-            <button
-              onClick={sendMessage}
-            >
+            <button onClick={handleSend} disabled={loading || !message.trim()}>
               Send
             </button>
-          </div>
-        </div>
-
-        {/* Info Panel */}
-        <div className="chat-info">
-          <h3>Customer Info</h3>
-
-          <div className="info-card">
-            <p>Name: {activeChat.user}</p>
-            <p>Status: {activeChat.status}</p>
-            <p>Topic: {activeChat.topic}</p>
           </div>
         </div>
       </div>

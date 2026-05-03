@@ -3,14 +3,17 @@ import "./DashboardLayout.scss";
 
 import Navbar from "../../shared/Navbar/Navbar";
 import Sidebar from "../../shared/Sidebar/Sidebar";
+import useAuth from "../../../../../layers/hooks/useAuth";
 
 const DashboardLayout = () => {
+  const { user } = useAuth();
+
   return (
     <div className="dashboard-layout">
-      <Sidebar />
+      <Sidebar user={user} />
 
       <div className="dashboard-main">
-        <Navbar />
+        <Navbar user={user} />
 
         <div className="dashboard-content">
           <Outlet />

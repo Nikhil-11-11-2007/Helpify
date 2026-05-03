@@ -236,4 +236,29 @@
       color: $color-primary-light;
     }
   }
+
+  // ────────────────────────────────────────────
+  // Messages
+  // ────────────────────────────────────────────
+  &__error {
+    padding: $space-3 $space-4;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    color: #dc2626;
+    font-weight: $font-weight-medium;
+    text-align: center;
+  }
+
+  &__success {
+    padding: $space-3 $space-4;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    color: #059669;
+    font-weight: $font-weight-medium;
+    text-align: center;
+  }
 }

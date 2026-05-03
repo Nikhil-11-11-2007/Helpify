@@ -1,19 +1,45 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./LoginPage.scss";
-import { useRef, useEffect } from "react";
 import {
   animateFormEntry,
   animateFormFields,
 } from "../../../../../layers/animations/auth.animations";
+import useAuth from "../../../../../layers/hooks/useAuth";
+
 const LoginPage = () => {
   const pageRef = useRef(null);
+  const navigate = useNavigate();
+  const { user, loading, error, login, clearError } = useAuth();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  // ── Animation on mount
   useEffect(() => {
     animateFormEntry(pageRef);
     animateFormFields(pageRef);
   }, []);
 
-  const [showPassword, setShowPassword] = useState(false);
+  // ── Navigate on successful login
+  useEffect(() => {
+    if (user) {
+      navigate("/app/dashboard");
+    }
+  }, [user, navigate]);
+
+  // ── Cleanup error on unmount
+  useEffect(() => {
+    return () => clearError();
+  }, [clearError]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (email.trim() && password.trim()) {
+      login({ email, password });
+    }
+  };
 
   return (
     <div className="login-page" ref={pageRef}>
@@ -24,7 +50,7 @@ const LoginPage = () => {
         </p>
       </div>
 
-      <form className="login-page__form" onSubmit={(e) => e.preventDefault()}>
+      <form className="login-page__form" onSubmit={handleSubmit}>
         {/* ── Email */}
         <div className="login-page__field">
           <label className="login-page__label" htmlFor="email">
@@ -52,6 +78,9 @@ const LoginPage = () => {
               className="login-page__input"
               placeholder="you@company.com"
               autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
             />
           </div>
         </div>
@@ -88,6 +117,9 @@ const LoginPage = () => {
               className="login-page__input login-page__input--password"
               placeholder="Enter your password"
               autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
             />
             <button
               type="button"
@@ -139,8 +171,8 @@ const LoginPage = () => {
         </div>
 
         {/* ── Submit */}
-        <button type="submit" className="login-page__btn">
-          <span>Sign In</span>
+        <button type="submit" className="login-page__btn" disabled={loading}>
+          <span>{loading ? "Signing in..." : "Sign In"}</span>
           <svg
             width="18"
             height="18"
@@ -154,6 +186,9 @@ const LoginPage = () => {
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </button>
+
+        {/* ── Error message */}
+        {error && <div className="login-page__error">{error}</div>}
       </form>
 
       {/* ── Divider */}

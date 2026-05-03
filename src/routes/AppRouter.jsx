@@ -6,6 +6,7 @@ import {
 
 import AuthLayout from "../layers/ui/components/layout/AuthLayout/AuthLayout";
 import DashboardLayout from "../layers/ui/components/layout/DashboardLayout/DashboardLayout";
+import PrivateRoute from "./PrivateRoute";
 
 import LoginPage from "../layers/ui/pages/auth/LoginPage/LoginPage";
 import RegisterPage from "../layers/ui/pages/auth/RegisterPage/RegisterPage";
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
     element: <Navigate to="/auth/login" replace />,
   },
 
-  // Auth Routes
+  // Auth Routes (public)
   {
     path: "/auth",
     element: <AuthLayout />,
@@ -42,34 +43,40 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Dashboard Routes
+  // Dashboard Routes (protected)
   {
     path: "/app",
-    element: <DashboardLayout />,
+    element: <PrivateRoute />,
     children: [
       {
-        index: true,
-        element: <Navigate to="dashboard" replace />,
-      },
-      {
-        path: "dashboard",
-        element: <DashboardPage />,
-      },
-      {
-        path: "faqs",
-        element: <FaqsPage />,
-      },
-      {
-        path: "tickets",
-        element: <TicketsPage />,
-      },
-      {
-        path: "chat",
-        element: <ChatPage />,
-      },
-      {
-        path: "business",
-        element: <BusinessPage />,
+        path: "",
+        element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: <Navigate to="dashboard" replace />,
+          },
+          {
+            path: "dashboard",
+            element: <DashboardPage />,
+          },
+          {
+            path: "faqs",
+            element: <FaqsPage />,
+          },
+          {
+            path: "tickets",
+            element: <TicketsPage />,
+          },
+          {
+            path: "chat",
+            element: <ChatPage />,
+          },
+          {
+            path: "business",
+            element: <BusinessPage />,
+          },
+        ],
       },
     ],
   },
