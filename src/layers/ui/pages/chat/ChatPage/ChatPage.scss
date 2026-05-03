@@ -1,0 +1,315 @@
+@use "../../../../../styles/variables" as *;
+@use "../../../../../styles/mixins" as *;
+
+.chat-page {
+  padding: $space-8;
+  min-height: 100vh;
+  background: $color-bg;
+  color: $color-text-primary;
+  animation: pageFade 0.5s ease;
+
+  @include tablet {
+    padding: $space-4;
+  }
+}
+
+/* HEADER */
+
+.chat-header {
+  margin-bottom: $space-8;
+
+  h1 {
+    font-size: $font-size-2xl;
+    font-family: $font-display;
+    margin-bottom: $space-2;
+  }
+
+  p {
+    color: $color-text-muted;
+    font-size: $font-size-sm;
+  }
+}
+
+/* MAIN LAYOUT */
+
+.chat-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr 280px;
+  gap: $space-5;
+
+  @include laptop {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* SIDEBAR */
+
+.chat-sidebar {
+  @include card-surface;
+  padding: $space-5;
+  animation: slideLeft 0.45s ease;
+}
+
+/* CHAT SESSION */
+
+.chat-session {
+  padding: $space-4;
+  border-radius: $radius-md;
+  cursor: pointer;
+  margin-bottom: $space-4;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all $transition-base;
+
+  h4 {
+    margin-bottom: $space-2;
+    font-size: $font-size-base;
+  }
+
+  p {
+    color: $color-text-muted;
+    margin-bottom: $space-3;
+    font-size: $font-size-sm;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  &.active {
+    border: 1px solid $color-primary;
+    box-shadow: $shadow-md;
+  }
+}
+
+/* CHAT WINDOW */
+
+.chat-window {
+  @include card-surface;
+  padding: $space-5;
+  animation: fadeUp 0.45s ease;
+}
+
+/* TOP */
+
+.chat-top {
+  padding-bottom: $space-5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  span {
+    color: $color-text-muted;
+    font-size: $font-size-sm;
+  }
+}
+
+/* MESSAGES */
+
+.chat-messages {
+  height: 500px;
+  overflow-y: auto;
+  padding: $space-5 0;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $color-primary;
+    border-radius: $radius-full;
+  }
+}
+
+/* MESSAGE */
+
+.message {
+  padding: $space-4 $space-5;
+  border-radius: $radius-md;
+  margin-bottom: $space-4;
+  max-width: 70%;
+  animation: messageFade 0.35s ease;
+  line-height: 1.7;
+
+  @include tablet {
+    max-width: 100%;
+  }
+}
+
+.message.customer {
+  background: rgba(255, 255, 255, 0.05);
+  margin-right: auto;
+}
+
+.message.ai {
+  background: rgba($color-primary, 0.18);
+  margin-left: auto;
+}
+
+/* INPUT */
+
+.chat-input {
+  margin-top: $space-4;
+
+  textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: $space-4;
+    border: none;
+    resize: none;
+    margin-bottom: $space-4;
+    border-radius: $radius-md;
+    background: rgba(255, 255, 255, 0.05);
+    color: $color-text-primary;
+    outline: none;
+    transition: $transition-base;
+
+    &::placeholder {
+      color: $color-text-muted;
+    }
+
+    &:focus {
+      border: 1px solid $color-primary;
+      box-shadow: $shadow-md;
+    }
+  }
+
+  button {
+    @include btn-primary;
+    width: auto;
+    padding: 14px 22px;
+  }
+}
+
+/* INFO PANEL */
+
+.chat-info {
+  @include card-surface;
+  padding: $space-5;
+  animation: slideRight 0.45s ease;
+}
+
+/* INFO CARD */
+
+.info-card {
+  margin-top: $space-5;
+
+  p {
+    margin-bottom: $space-4;
+    color: $color-text-muted;
+    font-size: $font-size-sm;
+  }
+}
+
+/* STATUS */
+
+.status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: $radius-full;
+  margin-top: $space-2;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+}
+
+.status.active {
+  background: rgba($color-success, 0.18);
+  color: $color-success;
+}
+
+.status.pending {
+  background: rgba(245, 158, 11, 0.18);
+  color: #f59e0b;
+}
+
+.status.resolved {
+  background: rgba($color-primary, 0.18);
+  color: $color-primary-light;
+}
+
+/* RESPONSIVE */
+
+@include laptop {
+  .chat-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .chat-sidebar,
+  .chat-info {
+    order: 2;
+  }
+
+  .chat-window {
+    order: 1;
+  }
+}
+
+@include tablet {
+  .chat-page {
+    padding: $space-4;
+  }
+
+  .message {
+    max-width: 100%;
+  }
+
+  .chat-window,
+  .chat-sidebar,
+  .chat-info {
+    padding: $space-4;
+  }
+}
+
+/* ANIMATIONS */
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes messageFade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

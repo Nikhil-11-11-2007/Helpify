@@ -1,0 +1,84 @@
+@use "../../../../../styles/variables" as *;
+@use "../../../../../styles/mixins" as *;
+
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: $color-surface;
+  padding: $space-8 $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  border-right: $border-light;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  transition: $transition-base;
+  animation: slideIn 0.45s ease;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($color-primary, 0.15);
+    border-radius: $radius-full;
+  }
+
+  a {
+    text-decoration: none;
+    color: $color-text-secondary;
+    padding: $space-4 $space-4;
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    transition: $transition-base;
+    position: relative;
+    overflow: hidden;
+
+    @include focus-ring;
+
+    &:hover {
+      background: rgba($color-primary, 0.06);
+      color: $color-primary;
+      transform: translateX(4px);
+    }
+
+    &.active {
+      background: $gradient-brand;
+      color: $color-white;
+      box-shadow: $shadow-md;
+    }
+  }
+
+  @include tablet {
+    width: 90px;
+    padding: $space-5 $space-2;
+
+    a {
+      font-size: $font-size-xs;
+      padding: $space-3;
+      text-align: center;
+    }
+  }
+
+  @include mobile {
+    width: 72px;
+
+    a {
+      padding: $space-3 $space-2;
+      font-size: 11px;
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

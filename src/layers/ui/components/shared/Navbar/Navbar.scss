@@ -1,0 +1,155 @@
+@use "../../../../../styles/variables" as *;
+@use "../../../../../styles/mixins" as *;
+
+.navbar {
+  width: 100%;
+  padding: $space-5 $space-8;
+  @include flex-between;
+  background: rgba($color-surface, 0.85);
+  border-bottom: $border-light;
+  backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: $z-above;
+  animation: navFade 0.5s ease;
+
+  @include tablet {
+    padding: $space-4;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $space-4;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: $space-8;
+
+    @include tablet {
+      width: 100%;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $space-4;
+    }
+  }
+
+  &__logo {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    font-family: $font-display;
+    color: $color-primary;
+    letter-spacing: -0.5px;
+  }
+
+  &__search {
+    position: relative;
+
+    @include tablet {
+      width: 100%;
+    }
+
+    input {
+      @include input-base;
+      width: 300px;
+      padding-left: $space-5;
+
+      @include tablet {
+        width: 100%;
+      }
+    }
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+
+    @include tablet {
+      width: 100%;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+  }
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    border: none;
+    cursor: pointer;
+    border-radius: $radius-md;
+    background: $color-surface;
+    border: $border-light;
+    color: $color-primary;
+    font-size: $font-size-base;
+    transition: $transition-base;
+
+    @include flex-center;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-md;
+    }
+  }
+
+  &__profile {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: $radius-full;
+    @include flex-center;
+    background: $gradient-brand;
+    color: $color-white;
+    font-weight: $font-weight-bold;
+    box-shadow: $shadow-sm;
+  }
+
+  &__user {
+    h4 {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+    }
+
+    p {
+      font-size: $font-size-xs;
+      color: $color-text-muted;
+      margin-top: 2px;
+    }
+
+    @include mobile {
+      display: none;
+    }
+  }
+
+  &__logout {
+    padding: $space-2 $space-4;
+    border-radius: $radius-md;
+    text-decoration: none;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    background: rgba($color-error, 0.12);
+    color: $color-error;
+    transition: $transition-base;
+
+    &:hover {
+      background: $color-error;
+      color: $color-white;
+    }
+  }
+}
+
+@keyframes navFade {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
